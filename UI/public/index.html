@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau User Management - Voice Commands</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #16325c;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            border: 1px solid #e1e5e9;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f3f3f3;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #0176d3 0%, #014486 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 4px 16px rgba(1, 118, 211, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        h1 {
+            color: #16325c;
+            margin-bottom: 8px;
+            font-size: 2.4em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #706e6b;
+            margin-bottom: 0;
+            font-size: 1.15em;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .examples {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 28px;
+            margin: 30px 0;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .examples h4 {
+            color: #16325c;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .example-item {
+            margin: 16px 0;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #0176d3;
+            font-size: 0.95em;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .example-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .example-item strong {
+            color: #0176d3;
+            font-weight: 600;
+        }
+
+        .example-item::before {
+            content: '💡';
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            border: 2px solid #0176d3;
+        }
+
+        .speech-settings {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 28px;
+            margin: 30px 0;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .speech-settings h4 {
+            color: #16325c;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .speech-controls {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .speech-controls select {
+            padding: 10px 14px;
+            border: 1px solid #d8dde6;
+            border-radius: 6px;
+            font-size: 0.9em;
+            background: white;
+            color: #16325c;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .speech-controls select:focus {
+            outline: none;
+            border-color: #0176d3;
+            box-shadow: 0 0 0 2px rgba(1, 118, 211, 0.2);
+        }
+
+        .speech-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: #16325c;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #d8dde6;
+        }
+
+        .speech-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #0176d3;
+            cursor: pointer;
+        }
+
+        .mic-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            gap: 20px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .text-input-container {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .mic-button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #d8dde6;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            color: #16325c;
+            background: white;
+        }
+
+        .text-input:focus {
+            border-color: #0176d3;
+            box-shadow: 0 0 0 3px rgba(1, 118, 211, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .text-input::placeholder {
+            color: #706e6b;
+            font-style: italic;
+        }
+
+        .text-submit-btn {
+            background: linear-gradient(135deg, #0176d3 0%, #014486 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(1, 118, 211, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text-submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .text-submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .text-submit-btn:hover {
+            background: linear-gradient(135deg, #014486 0%, #012b5a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(1, 118, 211, 0.4);
+        }
+
+        .text-submit-btn:disabled {
+            background: #c9c7c5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #706e6b;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d8dde6, transparent);
+        }
+
+        .or-divider span {
+            padding: 0 20px;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #d8dde6;
+            font-size: 0.9em;
+        }
+
+        .mic-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0176d3 0%, #014486 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(1, 118, 211, 0.3);
+            overflow: hidden;
+        }
+
+        .mic-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .mic-icon:hover::before {
+            transform: scale(1);
+        }
+
+        .mic-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: currentColor;
+            transition: all 0.3s ease;
+        }
+
+        .mic-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(1, 118, 211, 0.4);
+        }
+
+        .mic-icon:hover svg {
+            transform: scale(1.1);
+        }
+
+        .mic-icon.recording {
+            background: linear-gradient(135deg, #ea001e 0%, #c23934 100%);
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 6px 20px rgba(234, 0, 30, 0.4);
+        }
+
+        .mic-icon.recording::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid rgba(234, 0, 30, 0.3);
+            border-radius: 50%;
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .mic-icon:disabled {
+            background: #c9c7c5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin: 20px 0;
+            display: none;
+            border-radius: 6px;
+        }
+
+        .response-audio {
+            width: 100%;
+            margin: 15px 0;
+            display: none;
+            border-radius: 6px;
+        }
+
+        .loading {
+            display: none;
+            margin: 24px 0;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border-radius: 12px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0176d3;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+            box-shadow: 0 2px 8px rgba(1, 118, 211, 0.2);
+        }
+
+        .loading div {
+            color: #16325c;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        .result {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 28px;
+            margin-top: 30px;
+            text-align: left;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .result h3 {
+            color: #16325c;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .transcription {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 8px;
+            padding: 18px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #16325c;
+            font-size: 0.9em;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .confirm-section {
+            text-align: center;
+            margin-top: 24px;
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #0176d3 0%, #014486 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(1, 118, 211, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #014486 0%, #012b5a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(1, 118, 211, 0.4);
+        }
+
+        .btn:disabled {
+            background: #c9c7c5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .api-response {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 28px;
+            margin-top: 24px;
+            text-align: left;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .api-response h3 {
+            color: #16325c;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .api-response-content {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 8px;
+            padding: 18px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #16325c;
+            font-size: 0.9em;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .error {
+            background: linear-gradient(135deg, #fef7f7 0%, #fdf2f2 100%);
+            border: 1px solid #ea001e;
+            color: #ea001e;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            display: none;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(234, 0, 30, 0.1);
+            position: relative;
+        }
+
+        .permission-error {
+            background: linear-gradient(135deg, #fef7f7 0%, #fdf2f2 100%);
+            border: 1px solid #ea001e;
+            color: #ea001e;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            display: none;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(234, 0, 30, 0.1);
+            position: relative;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+            border: 1px solid #04844b;
+            color: #04844b;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            display: none;
+            font-size: 0.9em;
+            box-shadow: 0 2px 8px rgba(4, 132, 75, 0.1);
+            position: relative;
+        }
+
+        .success::before {
+            content: '✅';
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
+
+        .command-history {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 28px;
+            margin: 24px 0;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .command-history h4 {
+            color: #16325c;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .history-items {
+            margin-bottom: 20px;
+        }
+
+        .history-item {
+            background: white;
+            border: 1px solid #d8dde6;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            border-color: #0176d3;
+            box-shadow: 0 2px 8px rgba(1, 118, 211, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .history-command {
+            flex: 1;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            color: #16325c;
+            line-height: 1.4;
+        }
+
+        .history-timestamp {
+            color: #706e6b;
+            font-size: 0.8em;
+            margin-left: 16px;
+            white-space: nowrap;
+        }
+
+        .history-replay {
+            background: #0176d3;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 12px;
+        }
+
+        .history-replay:hover {
+            background: #014486;
+            transform: scale(1.05);
+        }
+
+        .history-clear {
+            background: #ea001e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 16px;
+            width: 100%;
+        }
+
+        .history-clear:hover {
+            background: #c23934;
+            transform: translateY(-1px);
+        }
+
+        /* Voice Feedback Styles */
+        .voice-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #04844b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(4, 132, 75, 0.3);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Enhanced Progress Indicators */
+        .progress-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #d8dde6;
+            color: #706e6b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .progress-step-icon {
+            background: #0176d3;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        .progress-step.completed .progress-step-icon {
+            background: #04844b;
+            color: white;
+        }
+
+        .progress-step-label {
+            font-size: 0.8em;
+            color: #706e6b;
+            font-weight: 500;
+        }
+
+        .progress-step.active .progress-step-label {
+            color: #0176d3;
+            font-weight: 600;
+        }
+
+        .progress-step.completed .progress-step-label {
+            color: #04844b;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: #d8dde6;
+            z-index: 1;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0176d3, #04844b);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Auto-complete Styles */
+        .autocomplete-container {
+            position: relative;
+            flex: 1;
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #d8dde6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f3f3;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
+
+        .suggestion-item.selected {
+            background: #0176d3;
+            color: white;
+        }
+
+        .suggestion-icon {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .suggestion-text {
+            flex: 1;
+            font-size: 0.9em;
+        }
+
+        .suggestion-category {
+            font-size: 0.7em;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px;
+                margin: 10px;
+            }
+            
+            .speech-controls {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .text-input-container {
+                flex-direction: column;
+            }
+            
+            .mic-icon {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .mic-icon svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width: 50px; height: 50px; fill: white;">
+                    <!-- Tableau Logo -->
+                    <path d="M40 40h30v30H40z"/>
+                    <path d="M80 40h30v30H80z"/>
+                    <path d="M120 40h30v30h-30z"/>
+                    <path d="M40 80h30v30H40z"/>
+                    <path d="M80 80h30v30H80z"/>
+                    <path d="M120 80h30v30h-30z"/>
+                    <path d="M40 120h30v30H40z"/>
+                    <path d="M80 120h30v30H80z"/>
+                    <path d="M120 120h30v30h-30z"/>
+                    <!-- Tableau "T" -->
+                    <path d="M160 40h20v10h-20z"/>
+                    <path d="M165 50h10v30h-10z"/>
+                </svg>
+            </div>
+            <h1>Tableau User Management</h1>
+            <p class="subtitle">Voice-powered user administration with AI assistance</p>
+        </div>
+
+        <div class="mic-container">
+            <div class="input-section">
+                <div class="text-input-container">
+                    <div class="autocomplete-container">
+                        <input type="text" class="text-input" id="textInput" placeholder="Type your Tableau command here..." />
+                        <div class="autocomplete-suggestions" id="autocompleteSuggestions"></div>
+                    </div>
+                    <button class="text-submit-btn" id="textSubmitBtn">Send</button>
+                </div>
+                
+                <div class="or-divider">
+                    <span>OR</span>
+                </div>
+                
+                <div class="mic-button-container">
+                    <button class="mic-icon" id="micIcon" title="Click to start/stop recording">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="progress-step" id="step1">
+                    <div class="progress-step-icon">🎤</div>
+                    <div class="progress-step-label">Recording</div>
+                </div>
+                <div class="progress-step" id="step2">
+                    <div class="progress-step-icon">🔄</div>
+                    <div class="progress-step-label">Processing</div>
+                </div>
+                <div class="progress-step" id="step3">
+                    <div class="progress-step-icon">💬</div>
+                    <div class="progress-step-label">AI Response</div>
+                </div>
+                <div class="progress-step" id="step4">
+                    <div class="progress-step-icon">🔊</div>
+                    <div class="progress-step-label">Voice Output</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="voice-feedback" id="voiceFeedback"></div>
+
+        <audio id="audioPlayer" class="audio-player" controls style="display: none;"></audio>
+        <audio id="responseAudio" class="response-audio" controls style="display: none;"></audio>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Processing your command...</div>
+        </div>
+
+        <div class="error" id="error"></div>
+        <div class="permission-error" id="permissionError"></div>
+
+        <div class="result" id="result">
+            <h3>Command Recognized</h3>
+            <div class="transcription" id="transcription"></div>
+            <div class="confirm-section" id="confirmSection">
+                <button class="btn" id="confirmBtn">
+                    Execute Command
+                </button>
+            </div>
+        </div>
+
+        <div class="api-response" id="apiResponse">
+            <h3>Tableau Response</h3>
+            <div class="api-response-content" id="apiResponseContent"></div>
+        </div>
+
+        <div class="speech-settings">
+            <h4>Voice Response Settings</h4>
+            <div class="speech-controls">
+                <div class="speech-toggle">
+                    <input type="checkbox" id="speechEnabled" checked>
+                    <label for="speechEnabled">Enable Voice Responses</label>
+                </div>
+                <select id="speechLanguage">
+                    <option value="english">English</option>
+                    <option value="hindi">Hindi</option>
+                </select>
+                <select id="speechEngine">
+                    <option value="aws">AWS Polly</option>
+                    <option value="elevenlabs">ElevenLabs</option>
+                </select>
+                <button class="btn" onclick="testSpeechSynthesis()" style="padding: 8px 16px; font-size: 0.85em;">Test Voice</button>
+            </div>
+        </div>
+
+        <div class="examples">
+            <h4>Example Voice Commands</h4>
+            <div class="example-item">
+                <strong>Add User:</strong> "Add user John Smith to site Default"
+            </div>
+            <div class="example-item">
+                <strong>Remove User:</strong> "Remove user Jane Doe from site Marketing"
+            </div>
+            <div class="example-item">
+                <strong>Update User:</strong> "Change user role for Mike Johnson to Viewer"
+            </div>
+        </div>
+
+        <div class="command-history" id="commandHistory">
+            <h4>Command History</h4>
+            <div class="history-items"></div>
+            <button class="history-clear">Clear History</button>
+        </div>
+    </div>
+
+    <script>
+        // Recording functionality
+        const micIcon = document.getElementById('micIcon');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const responseAudio = document.getElementById('responseAudio');
+        const textInput = document.getElementById('textInput');
+        const textSubmitBtn = document.getElementById('textSubmitBtn');
+
+        // Shared elements
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const permissionError = document.getElementById('permissionError');
+        const result = document.getElementById('result');
+        const transcription = document.getElementById('transcription');
+        const confirmSection = document.getElementById('confirmSection');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const apiResponse = document.getElementById('apiResponse');
+        const apiResponseContent = document.getElementById('apiResponseContent');
+
+        // New elements
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const voiceFeedback = document.getElementById('voiceFeedback');
+        const autocompleteSuggestions = document.getElementById('autocompleteSuggestions');
+        const commandHistory = document.getElementById('commandHistory');
+
+        // Speech settings
+        const speechEnabled = document.getElementById('speechEnabled');
+        const speechLanguage = document.getElementById('speechLanguage');
+        const speechEngine = document.getElementById('speechEngine');
+
+        // Auto-complete suggestions
+        const suggestions = [
+            { text: 'Add user John Smith to site Default', category: 'Add User', icon: '👤' },
+            { text: 'Add user Jane Doe to site Marketing', category: 'Add User', icon: '👤' },
+            { text: 'Remove user John Smith from site Default', category: 'Remove User', icon: '❌' },
+            { text: 'Remove user Jane Doe from site Marketing', category: 'Remove User', icon: '❌' },
+            { text: 'Change user role for John Smith to Viewer', category: 'Update User', icon: '🔄' },
+            { text: 'Change user role for Jane Doe to Creator', category: 'Update User', icon: '🔄' },
+            { text: 'Show all users in site Default', category: 'List Users', icon: '📋' },
+            { text: 'Show all users in site Marketing', category: 'List Users', icon: '📋' }
+        ];
+
+        // Command history
+        let commandHistoryList = [];
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let recordedBlob = null;
+        let isRecording = false;
+        let currentTranscription = '';
+        let selectedSuggestionIndex = -1;
+
+        // Event listeners
+        micIcon.addEventListener('click', toggleRecording);
+        confirmBtn.addEventListener('click', sendToAPI);
+        textSubmitBtn.addEventListener('click', handleTextSubmit);
+        textInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleTextSubmit();
+            }
+        });
+
+        // Auto-complete event listeners
+        textInput.addEventListener('input', handleAutoComplete);
+        textInput.addEventListener('keydown', handleAutoCompleteKeydown);
+        textInput.addEventListener('focus', showAutoComplete);
+        textInput.addEventListener('blur', function() {
+            setTimeout(() => {
+                hideAutoComplete();
+            }, 200);
+        });
+
+        // Command history event listeners
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('history-replay')) {
+                const command = e.target.closest('.history-item').dataset.command;
+                textInput.value = command;
+                handleTextSubmit();
+            }
+            if (e.target.classList.contains('history-clear')) {
+                clearCommandHistory();
+            }
+        });
+
+        function handleTextSubmit() {
+            const text = textInput.value.trim();
+            if (text) {
+                currentTranscription = text;
+                result.style.display = 'none';
+                addToCommandHistory(text);
+                showProgress();
+                updateProgressStep(2);
+                sendToAPI();
+                textInput.value = '';
+                hideAutoComplete();
+                showVoiceFeedback('Command submitted successfully!', 'success');
+            } else {
+                showError('Please enter a command.');
+            }
+        }
+
+        async function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                await startRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                recordedBlob = null;
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordedBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    audioPlayer.src = URL.createObjectURL(recordedBlob);
+                    audioPlayer.style.display = 'none';
+                    transcribeAudio(recordedBlob);
+                };
+
+                mediaRecorder.start();
+                micIcon.classList.add('recording');
+                isRecording = true;
+                hideError();
+                hidePermissionError();
+                showProgress();
+                updateProgressStep(1);
+                showVoiceFeedback('Recording started...', 'success');
+
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+                showPermissionError('Microphone access denied. Please allow microphone permissions and try again.');
+                showVoiceFeedback('Microphone access denied', 'error');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                micIcon.classList.remove('recording');
+                isRecording = false;
+                updateProgressStep(2);
+                showVoiceFeedback('Recording stopped, processing...', 'success');
+            }
+        }
+
+        // Transcription functionality
+        async function transcribeAudio(audioFile) {
+            if (!audioFile) {
+                showError('No audio file to transcribe.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('audioFile', audioFile, 'recording.wav');
+
+            updateProgressStep(2);
+            hideError();
+            result.style.display = 'none';
+            apiResponse.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/transcribe', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showResult(data.transcription);
+                    updateProgressStep(3);
+                    showVoiceFeedback('Transcription completed!', 'success');
+                } else {
+                    showError(data.message || data.error || 'Transcription failed');
+                    showVoiceFeedback('Transcription failed', 'error');
+                }
+            } catch (err) {
+                showError('Network error: ' + err.message);
+                showVoiceFeedback('Network error occurred', 'error');
+            } finally {
+                hideProgress();
+            }
+        }
+
+        function showResult(transcriptionData) {
+            let text = '';
+            
+            if (Array.isArray(transcriptionData)) {
+                text = transcriptionData.join('\n');
+            } else if (typeof transcriptionData === 'string') {
+                text = transcriptionData;
+            } else {
+                text = JSON.stringify(transcriptionData, null, 2);
+            }
+
+            currentTranscription = text;
+            transcription.textContent = text || 'No transcription available';
+            result.style.display = 'block';
+            confirmSection.style.display = 'block';
+            addToCommandHistory(text);
+        }
+
+        // API functionality with speech synthesis
+        async function sendToAPI() {
+            if (!currentTranscription) {
+                showError('No transcription to send.');
+                return;
+            }
+
+            confirmBtn.disabled = true;
+            updateProgressStep(3);
+            hideError();
+
+            console.log('🚀 Sending API request with transcription:', currentTranscription);
+
+            try {
+                const requestBody = {
+                    userId: '4',
+                    query: currentTranscription
+                };
+                console.log('📤 Request body:', JSON.stringify(requestBody, null, 2));
+
+                const response = await fetch('/api/conversation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                console.log('📥 Response status:', response.status);
+                console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
+
+                const data = await response.json();
+                console.log('📥 Raw response data:', data);
+                console.log('📥 Response data type:', typeof data);
+                console.log('📥 Response data keys:', data ? Object.keys(data) : 'null/undefined');
+
+                if (response.ok) {
+                    console.log('✅ API request successful');
+                    console.log('📋 Data before processing:', JSON.stringify(data, null, 2));
+                    
+                    showAPIResponse(data);
+                    updateProgressStep(4);
+                    showVoiceFeedback('Response received successfully!', 'success');
+                    
+                    // Synthesize speech for the response
+                    if (speechEnabled.checked) {
+                        console.log('🔊 Speech synthesis enabled, processing response...');
+                        await synthesizeResponseSpeech(data);
+                    }
+                } else {
+                    console.error('❌ API request failed:', response.status, response.statusText);
+                    console.error('❌ Error data:', data);
+                    showError('API request failed: ' + (data.message || data.error || response.statusText));
+                    showVoiceFeedback('API request failed', 'error');
+                }
+            } catch (err) {
+                console.error('💥 Network error:', err);
+                showError('Network error: ' + err.message);
+                showVoiceFeedback('Network error occurred', 'error');
+            } finally {
+                hideProgress();
+                confirmBtn.disabled = false;
+            }
+        }
+
+        function showAPIResponse(data) {
+            console.log('🎯 showAPIResponse called with data:', data);
+            console.log('🎯 Data type:', typeof data);
+            
+            let responseText = '';
+            
+            if (typeof data === 'string') {
+                responseText = data;
+                console.log('📝 Data is string, using as-is:', responseText);
+            } else if (data && data.agentResponse) {
+                responseText = data.agentResponse;
+                console.log('📝 Using agentResponse:', responseText);
+            } else if (data && data.response) {
+                responseText = data.response;
+                console.log('📝 Using response:', responseText);
+            } else if (data && data.message) {
+                responseText = data.message;
+                console.log('📝 Using message:', responseText);
+            } else if (data && data.result) {
+                responseText = data.result;
+                console.log('📝 Using result:', responseText);
+            } else if (data && data.text) {
+                responseText = data.text;
+                console.log('📝 Using text:', responseText);
+            } else if (data && data.content) {
+                responseText = data.content;
+                console.log('📝 Using content:', responseText);
+            } else {
+                responseText = JSON.stringify(data, null, 2);
+                console.log('📝 Data is object, stringifying:', responseText);
+            }
+
+            console.log('🧹 Original response text:', responseText);
+
+            // Clean up the response text for speech synthesis
+            responseText = responseText.trim();
+            
+            // Handle JSON objects with empty keys like { "": "message" }
+            if (responseText.includes('{ "": "')) {
+                responseText = responseText.replace(/\{ "": "([^"]+)" \}/, '$1');
+            }
+            
+            // Remove outer curly braces but preserve content inside
+            responseText = responseText.replace(/^\s*\{([^}]*)\}\s*$/, '$1').trim();
+            
+            // Clean up extra whitespace and newlines but preserve user lists
+            responseText = responseText.replace(/\s+/g, ' ').trim();
+            console.log('🧹 Final cleaned response text:', responseText);
+
+            apiResponseContent.textContent = responseText || 'No response data available';
+            apiResponse.style.display = 'block';
+            console.log('✅ Response displayed in UI');
+        }
+
+        // Speech synthesis for responses
+        async function synthesizeResponseSpeech(data) {
+            let responseText = '';
+            
+            // Handle different response formats
+            if (typeof data === 'string') {
+                responseText = data;
+            } else if (data && data.agentResponse) {
+                responseText = data.agentResponse;
+            } else if (data && data.response) {
+                responseText = data.response;
+            } else if (data && data.message) {
+                responseText = data.message;
+            } else if (data && data.result) {
+                responseText = data.result;
+            } else if (data && data.text) {
+                responseText = data.text;
+            } else if (data && data.content) {
+                responseText = data.content;
+            } else {
+                // If it's an object, try to extract meaningful text
+                responseText = JSON.stringify(data, null, 2);
+            }
+
+            // Clean up the response text for speech synthesis
+            responseText = responseText.trim();
+            
+            // Handle JSON objects with empty keys like { "": "message" }
+            if (responseText.includes('{ "": "')) {
+                responseText = responseText.replace(/\{ "": "([^"]+)" \}/, '$1');
+            }
+            
+            // Remove outer curly braces but preserve content inside
+            responseText = responseText.replace(/^\s*\{([^}]*)\}\s*$/, '$1').trim();
+            
+            // Clean up extra whitespace and newlines but preserve user lists
+            responseText = responseText.replace(/\s+/g, ' ').trim();
+            
+            if (!responseText || responseText === 'No response data available' || responseText === '{}') {
+                console.log('No valid response text to synthesize');
+                return;
+            }
+
+            console.log('Synthesizing speech for:', responseText);
+
+            try {
+                const language = speechLanguage.value;
+                const engine = speechEngine.value;
+
+                // Create a text file from the response
+                const textBlob = new Blob([responseText], { type: 'text/plain' });
+                const formData = new FormData();
+                formData.append('textFile', textBlob, 'response.txt');
+                formData.append('language', language);
+                formData.append('engine', engine);
+
+                console.log('Sending speech synthesis request with:', { language, engine });
+
+                const response = await fetch('/api/synthesize', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const responseData = await response.json();
+                console.log('Speech synthesis response:', responseData);
+
+                if (response.ok && responseData.success && responseData.audioStream) {
+                    // Convert base64 audio stream to blob
+                    const audioBlob = new Blob([Uint8Array.from(atob(responseData.audioStream), c => c.charCodeAt(0))], { type: 'audio/mp3' });
+                    responseAudio.src = URL.createObjectURL(audioBlob);
+                    responseAudio.style.display = 'none'; // Hide the audio player
+                    
+                    console.log('Audio blob created, attempting to play...');
+                    
+                    // Auto-play the response without showing the player
+                    responseAudio.play().catch(err => {
+                        console.log('Test auto-play blocked:', err);
+                    });
+                } else {
+                    console.error('Speech synthesis failed:', responseData.message || responseData.error);
+                    // Don't show error to user since audio is hidden
+                }
+            } catch (err) {
+                console.error('Speech synthesis error:', err.message);
+                showError('Speech synthesis error: ' + err.message);
+            }
+        }
+
+        // Test speech synthesis function
+        async function testSpeechSynthesis() {
+            const testText = "This is a test of the voice response system. User successfully added to site Tokyo.";
+            console.log('Testing speech synthesis with:', testText);
+            
+            try {
+                const language = speechLanguage.value;
+                const engine = speechEngine.value;
+
+                // Create a text file from the test text
+                const textBlob = new Blob([testText], { type: 'text/plain' });
+                const formData = new FormData();
+                formData.append('textFile', textBlob, 'test.txt');
+                formData.append('language', language);
+                formData.append('engine', engine);
+
+                console.log('Sending test speech synthesis request with:', { language, engine });
+
+                const response = await fetch('/api/synthesize', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const responseData = await response.json();
+                console.log('Test speech synthesis response:', responseData);
+
+                if (response.ok && responseData.success && responseData.audioStream) {
+                    // Convert base64 audio stream to blob
+                    const audioBlob = new Blob([Uint8Array.from(atob(responseData.audioStream), c => c.charCodeAt(0))], { type: 'audio/mp3' });
+                    responseAudio.src = URL.createObjectURL(audioBlob);
+                    responseAudio.style.display = 'none'; // Hide the audio player
+                    
+                    console.log('Test audio blob created, attempting to play...');
+                    
+                    // Auto-play the response without showing the player
+                    responseAudio.play().catch(err => {
+                        console.log('Test auto-play blocked:', err);
+                    });
+                    
+                    showSuccess('Test voice synthesis successful!');
+                } else {
+                    console.error('Test speech synthesis failed:', responseData.message || responseData.error);
+                    showError('Test speech synthesis failed: ' + (responseData.message || responseData.error || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Test speech synthesis error:', err.message);
+                showError('Test speech synthesis error: ' + err.message);
+            }
+        }
+
+        function showError(message) {
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+
+        function hideError() {
+            error.style.display = 'none';
+        }
+
+        function showPermissionError(message) {
+            permissionError.textContent = message;
+            permissionError.style.display = 'block';
+        }
+
+        function hidePermissionError() {
+            permissionError.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const success = document.createElement('div');
+            success.className = 'success';
+            success.textContent = message;
+            success.style.display = 'block';
+            
+            // Insert after the error div
+            const errorDiv = document.getElementById('error');
+            errorDiv.parentNode.insertBefore(success, errorDiv.nextSibling);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                success.style.display = 'none';
+                success.remove();
+            }, 5000);
+        }
+
+        // Auto-complete functions
+        function handleAutoComplete() {
+            const input = textInput.value.toLowerCase();
+            if (input.length < 2) {
+                hideAutoComplete();
+                return;
+            }
+
+            const filteredSuggestions = suggestions.filter(suggestion => 
+                suggestion.text.toLowerCase().includes(input)
+            );
+
+            if (filteredSuggestions.length > 0) {
+                showAutoCompleteSuggestions(filteredSuggestions);
+            } else {
+                hideAutoComplete();
+            }
+        }
+
+        function showAutoCompleteSuggestions(filteredSuggestions) {
+            autocompleteSuggestions.innerHTML = '';
+            selectedSuggestionIndex = -1;
+
+            filteredSuggestions.forEach((suggestion, index) => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                item.innerHTML = `
+                    <span class="suggestion-icon">${suggestion.icon}</span>
+                    <span class="suggestion-text">${suggestion.text}</span>
+                    <span class="suggestion-category">${suggestion.category}</span>
+                `;
+                item.addEventListener('click', () => {
+                    textInput.value = suggestion.text;
+                    hideAutoComplete();
+                    handleTextSubmit();
+                });
+                autocompleteSuggestions.appendChild(item);
+            });
+
+            autocompleteSuggestions.style.display = 'block';
+        }
+
+        function handleAutoCompleteKeydown(e) {
+            const items = autocompleteSuggestions.querySelectorAll('.suggestion-item');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, items.length - 1);
+                updateSelectedSuggestion(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+                updateSelectedSuggestion(items);
+            } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+                e.preventDefault();
+                if (items[selectedSuggestionIndex]) {
+                    textInput.value = items[selectedSuggestionIndex].querySelector('.suggestion-text').textContent;
+                    hideAutoComplete();
+                    handleTextSubmit();
+                }
+            }
+        }
+
+        function updateSelectedSuggestion(items) {
+            items.forEach((item, index) => {
+                item.classList.toggle('selected', index === selectedSuggestionIndex);
+            });
+        }
+
+        function showAutoComplete() {
+            if (textInput.value.length >= 2) {
+                handleAutoComplete();
+            }
+        }
+
+        function hideAutoComplete() {
+            autocompleteSuggestions.style.display = 'none';
+            selectedSuggestionIndex = -1;
+        }
+
+        // Progress indicator functions
+        function showProgress() {
+            progressContainer.style.display = 'block';
+            updateProgressStep(1);
+        }
+
+        function updateProgressStep(step) {
+            // Reset all steps
+            for (let i = 1; i <= 4; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                stepElement.classList.remove('active', 'completed');
+            }
+
+            // Update progress bar
+            const progress = (step / 4) * 100;
+            progressFill.style.width = `${progress}%`;
+
+            // Update steps
+            for (let i = 1; i <= step; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                if (i === step) {
+                    stepElement.classList.add('active');
+                } else {
+                    stepElement.classList.add('completed');
+                }
+            }
+        }
+
+        function hideProgress() {
+            progressContainer.style.display = 'none';
+        }
+
+        // Voice feedback functions
+        function showVoiceFeedback(message, type = 'success') {
+            voiceFeedback.textContent = message;
+            voiceFeedback.style.background = type === 'success' ? '#04844b' : '#ea001e';
+            voiceFeedback.style.display = 'block';
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                voiceFeedback.style.display = 'none';
+            }, 3000);
+        }
+
+        // Command history functions
+        function addToCommandHistory(command) {
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const historyItem = { command, timestamp };
+            
+            // Add to beginning of array
+            commandHistoryList.unshift(historyItem);
+            
+            // Keep only last 10 commands
+            if (commandHistoryList.length > 10) {
+                commandHistoryList = commandHistoryList.slice(0, 10);
+            }
+            
+            updateCommandHistoryDisplay();
+            showCommandHistory();
+        }
+
+        function updateCommandHistoryDisplay() {
+            const historyContainer = commandHistory.querySelector('.history-items') || commandHistory;
+            
+            // Remove existing items (except the clear button)
+            const existingItems = historyContainer.querySelectorAll('.history-item');
+            existingItems.forEach(item => item.remove());
+            
+            // Add new items
+            commandHistoryList.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.dataset.command = item.command;
+                historyItem.innerHTML = `
+                    <span class="history-command">${item.command}</span>
+                    <span class="history-timestamp">${item.timestamp}</span>
+                    <button class="history-replay">Replay</button>
+                `;
+                historyContainer.insertBefore(historyItem, historyContainer.querySelector('.history-clear'));
+            });
+        }
+
+        function showCommandHistory() {
+            if (commandHistoryList.length > 0) {
+                commandHistory.style.display = 'block';
+            }
+        }
+
+        function clearCommandHistory() {
+            commandHistoryList = [];
+            commandHistory.style.display = 'none';
+        }
+    </script>
+</body>
+</html> 

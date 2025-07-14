@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text Integration Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .speech-api-ui {
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .speech-api-ui h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .speech-api-ui input, .speech-api-ui textarea {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+        }
+        .speech-api-ui button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .speech-api-ui button:hover {
+            background: #0056b3;
+        }
+        .speech-api-ui button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Speech-to-Text Integration Examples</h1>
+        <p>This page demonstrates different ways to integrate the speech-to-text functionality into your website.</p>
+
+        <!-- Method 1: Using the JavaScript Library -->
+        <div class="section">
+            <h2>Method 1: JavaScript Library Integration</h2>
+            <p>Include the speech-api.js library and use it programmatically:</p>
+            
+            <div class="code-block">
+&lt;script src="http://localhost:3000/speech-api.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    const speechAPI = new SpeechToTextAPI('http://localhost:3000');
+    
+    // Transcribe a file
+    async function transcribeFile(file) {
+        const transcription = await speechAPI.transcribeFile(file);
+        console.log(transcription);
+    }
+    
+    // Record and transcribe
+    async function recordAndTranscribe() {
+        const transcription = await speechAPI.recordAndTranscribe(10000); // 10 seconds
+        console.log(transcription);
+    }
+&lt;/script&gt;
+            </div>
+
+            <h3>Try it out:</h3>
+            <div id="libraryExample">
+                <button class="btn" onclick="testLibrary()">Test Library Functions</button>
+                <div id="libraryResult"></div>
+            </div>
+        </div>
+
+        <!-- Method 2: Using the UI Component -->
+        <div class="section">
+            <h2>Method 2: UI Component Integration</h2>
+            <p>Use the built-in UI component for a complete interface:</p>
+            
+            <div class="code-block">
+&lt;div id="speechUI"&gt;&lt;/div&gt;
+&lt;script src="http://localhost:3000/speech-api.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    const speechAPI = new SpeechToTextAPI('http://localhost:3000');
+    const ui = speechAPI.createUI('speechUI');
+&lt;/script&gt;
+            </div>
+
+            <h3>Live Example:</h3>
+            <div id="speechUI"></div>
+        </div>
+
+        <!-- Method 3: Custom Integration -->
+        <div class="section">
+            <h2>Method 3: Custom Integration</h2>
+            <p>Build your own custom interface using the API:</p>
+            
+            <div class="code-block">
+&lt;div id="customUI"&gt;
+    &lt;input type="file" id="customFile" accept="audio/*"&gt;
+    &lt;button onclick="customTranscribe()"&gt;Transcribe&lt;/button&gt;
+    &lt;button onclick="customRecord()"&gt;Record&lt;/button&gt;
+    &lt;textarea id="customResult"&gt;&lt;/textarea&gt;
+&lt;/div&gt;
+            </div>
+
+            <h3>Custom Example:</h3>
+            <div id="customUI">
+                <input type="file" id="customFile" accept="audio/*" style="margin: 10px 0;">
+                <button class="btn" onclick="customTranscribe()">Transcribe File</button>
+                <button class="btn" onclick="customRecord()">Record Audio</button>
+                <br>
+                <textarea id="customResult" rows="4" cols="50" placeholder="Transcription will appear here..." 
+                          style="width: 100%; margin: 10px 0; padding: 10px;"></textarea>
+            </div>
+        </div>
+
+        <!-- Method 4: React/Vue Integration -->
+        <div class="section">
+            <h2>Method 4: Framework Integration</h2>
+            <p>For React, Vue, or other frameworks:</p>
+            
+            <h3>React Component:</h3>
+            <div class="code-block">
+import React, { useState, useEffect } from 'react';
+
+const SpeechToText = () => {
+    const [transcription, setTranscription] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const transcribeFile = async (file) => {
+        setIsLoading(true);
+        const formData = new FormData();
+        formData.append('audioFile', file);
+
+        try {
+            const response = await fetch('http://localhost:3000/api/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            setTranscription(data.transcription);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        &lt;div&gt;
+            &lt;input type="file" accept="audio/*" onChange={(e) =&gt; transcribeFile(e.target.files[0])} /&gt;
+            {isLoading && &lt;p&gt;Processing...&lt;/p&gt;}
+            &lt;textarea value={transcription} readOnly /&gt;
+        &lt;/div&gt;
+    );
+};
+            </div>
+
+            <h3>Vue Component:</h3>
+            <div class="code-block">
+&lt;template&gt;
+    &lt;div&gt;
+        &lt;input type="file" @change="handleFileUpload" accept="audio/*"&gt;
+        &lt;button @click="transcribe" :disabled="!selectedFile || isLoading"&gt;
+            {{ isLoading ? 'Processing...' : 'Transcribe' }}
+        &lt;/button&gt;
+        &lt;textarea v-model="transcription" readonly&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    data() {
+        return {
+            selectedFile: null,
+            transcription: '',
+            isLoading: false
+        }
+    },
+    methods: {
+        handleFileUpload(event) {
+            this.selectedFile = event.target.files[0];
+        },
+        async transcribe() {
+            if (!this.selectedFile) return;
+            
+            this.isLoading = true;
+            const formData = new FormData();
+            formData.append('audioFile', this.selectedFile);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/transcribe', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                this.transcription = data.transcription;
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                this.isLoading = false;
+            }
+        }
+    }
+}
+&lt;/script&gt;
+            </div>
+        </div>
+
+        <!-- API Documentation -->
+        <div class="section">
+            <h2>API Documentation</h2>
+            <p>Direct API endpoints you can use:</p>
+            
+            <h3>Transcribe Audio:</h3>
+            <div class="code-block">
+POST http://localhost:3000/api/transcribe
+Content-Type: multipart/form-data
+
+Body:
+- audioFile: Audio file (WAV, MP3, M4A, FLAC, OGG)
+
+Response:
+{
+    "success": true,
+    "transcription": ["Transcribed text..."],
+    "filename": "audio.wav"
+}
+            </div>
+
+            <h3>Health Check:</h3>
+            <div class="code-block">
+GET http://localhost:3000/api/health
+
+Response:
+{
+    "status": "OK",
+    "timestamp": "2024-01-01T00:00:00.000Z"
+}
+            </div>
+        </div>
+
+        <!-- Testing Section -->
+        <div class="section">
+            <h2>Test Your Integration</h2>
+            <button class="btn" onclick="testAPI()">Test API Health</button>
+            <div id="testResult"></div>
+        </div>
+    </div>
+
+    <!-- Include the Speech API Library -->
+    <script src="/speech-api.js"></script>
+    <script>
+        // Initialize the API
+        const speechAPI = new SpeechToTextAPI('http://localhost:3000');
+
+        // Method 1: Library Functions
+        async function testLibrary() {
+            const result = document.getElementById('libraryResult');
+            result.innerHTML = '<p>Testing library functions...</p>';
+            
+            try {
+                // Test health check
+                const isHealthy = await speechAPI.healthCheck();
+                result.innerHTML = `<p class="success">✅ API Health Check: ${isHealthy ? 'OK' : 'Failed'}</p>`;
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        // Method 2: UI Component
+        const ui = speechAPI.createUI('speechUI');
+
+        // Method 3: Custom Integration
+        async function customTranscribe() {
+            const fileInput = document.getElementById('customFile');
+            const result = document.getElementById('customResult');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select an audio file');
+                return;
+            }
+
+            try {
+                result.value = 'Processing...';
+                const transcription = await speechAPI.transcribeFile(file);
+                result.value = Array.isArray(transcription) ? transcription.join('\n') : transcription;
+            } catch (error) {
+                result.value = 'Error: ' + error.message;
+            }
+        }
+
+        async function customRecord() {
+            const result = document.getElementById('customResult');
+            
+            try {
+                result.value = 'Recording... Click again to stop.';
+                await speechAPI.startRecording({
+                    onStop: async (audioBlob) => {
+                        result.value = 'Processing recording...';
+                        try {
+                            const transcription = await speechAPI.transcribeFile(audioBlob);
+                            result.value = Array.isArray(transcription) ? transcription.join('\n') : transcription;
+                        } catch (error) {
+                            result.value = 'Error: ' + error.message;
+                        }
+                    },
+                    onError: (error) => {
+                        result.value = 'Error: ' + error;
+                    }
+                });
+            } catch (error) {
+                result.value = 'Error: ' + error.message;
+            }
+        }
+
+        // Test API
+        async function testAPI() {
+            const result = document.getElementById('testResult');
+            result.innerHTML = '<p>Testing API...</p>';
+            
+            try {
+                const isHealthy = await speechAPI.healthCheck();
+                if (isHealthy) {
+                    result.innerHTML = '<p class="success">✅ API is running and healthy!</p>';
+                } else {
+                    result.innerHTML = '<p class="error">❌ API health check failed</p>';
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ API Error: ${error.message}</p>`;
+            }
+        }
+
+        // Auto-test on page load
+        window.addEventListener('load', testAPI);
+    </script>
+</body>
+</html> 
