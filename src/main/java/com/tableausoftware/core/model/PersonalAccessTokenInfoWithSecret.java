@@ -1,0 +1,246 @@
+package com.tableausoftware.core.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.OffsetDateTime;
+import java.util.Objects;
+
+/**
+ * PersonalAccessTokenInfoWithSecret
+ */
+
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-06-17T20:34:40.295130+05:30[Asia/Kolkata]")
+public class PersonalAccessTokenInfoWithSecret {
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime expirationInUtc;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime issueInUtc;
+
+  private String secret;
+
+  private String tenantId;
+
+  private String tokenName;
+
+  private String tokenUUID;
+
+  private String userId;
+
+  /**
+   * Default constructor
+   * @deprecated Use {@link PersonalAccessTokenInfoWithSecret#PersonalAccessTokenInfoWithSecret(OffsetDateTime, String, String, String, String, String)}
+   */
+  @Deprecated
+  public PersonalAccessTokenInfoWithSecret() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public PersonalAccessTokenInfoWithSecret(OffsetDateTime issueInUtc, String secret, String tenantId, String tokenName, String tokenUUID, String userId) {
+    this.issueInUtc = issueInUtc;
+    this.secret = secret;
+    this.tenantId = tenantId;
+    this.tokenName = tokenName;
+    this.tokenUUID = tokenUUID;
+    this.userId = userId;
+  }
+
+  public PersonalAccessTokenInfoWithSecret expirationInUtc(OffsetDateTime expirationInUtc) {
+    this.expirationInUtc = expirationInUtc;
+    return this;
+  }
+
+  /**
+   * The time the PAT will expire in UTC.
+   * @return expirationInUtc
+  */
+  @Valid 
+  @Schema(name = "expirationInUtc", description = "The time the PAT will expire in UTC.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("expirationInUtc")
+  public OffsetDateTime getExpirationInUtc() {
+    return expirationInUtc;
+  }
+
+  public void setExpirationInUtc(OffsetDateTime expirationInUtc) {
+    this.expirationInUtc = expirationInUtc;
+  }
+
+  public PersonalAccessTokenInfoWithSecret issueInUtc(OffsetDateTime issueInUtc) {
+    this.issueInUtc = issueInUtc;
+    return this;
+  }
+
+  /**
+   * The time the PAT was created in UTC.
+   * @return issueInUtc
+  */
+  @NotNull @Valid 
+  @Schema(name = "issueInUtc", description = "The time the PAT was created in UTC.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("issueInUtc")
+  public OffsetDateTime getIssueInUtc() {
+    return issueInUtc;
+  }
+
+  public void setIssueInUtc(OffsetDateTime issueInUtc) {
+    this.issueInUtc = issueInUtc;
+  }
+
+  public PersonalAccessTokenInfoWithSecret secret(String secret) {
+    this.secret = secret;
+    return this;
+  }
+
+  /**
+   * The token secret that is generated when you create a PAT. Use the token secret when calling the [Sign In](#tag/Authentication-Methods/operation/personalAccessTokenLogin) method.
+   * @return secret
+  */
+  @NotNull 
+  @Schema(name = "secret", description = "The token secret that is generated when you create a PAT. Use the token secret when calling the [Sign In](#tag/Authentication-Methods/operation/personalAccessTokenLogin) method.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("secret")
+  public String getSecret() {
+    return secret;
+  }
+
+  public void setSecret(String secret) {
+    this.secret = secret;
+  }
+
+  public PersonalAccessTokenInfoWithSecret tenantId(String tenantId) {
+    this.tenantId = tenantId;
+    return this;
+  }
+
+  /**
+   * The tenant ID of the PAT.
+   * @return tenantId
+  */
+  @NotNull 
+  @Schema(name = "tenantId", description = "The tenant ID of the PAT.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("tenantId")
+  public String getTenantId() {
+    return tenantId;
+  }
+
+  public void setTenantId(String tenantId) {
+    this.tenantId = tenantId;
+  }
+
+  public PersonalAccessTokenInfoWithSecret tokenName(String tokenName) {
+    this.tokenName = tokenName;
+    return this;
+  }
+
+  /**
+   * Name of the PAT.
+   * @return tokenName
+  */
+  @NotNull 
+  @Schema(name = "tokenName", description = "Name of the PAT.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("tokenName")
+  public String getTokenName() {
+    return tokenName;
+  }
+
+  public void setTokenName(String tokenName) {
+    this.tokenName = tokenName;
+  }
+
+  public PersonalAccessTokenInfoWithSecret tokenUUID(String tokenUUID) {
+    this.tokenUUID = tokenUUID;
+    return this;
+  }
+
+  /**
+   * The unique ID of the PAT.
+   * @return tokenUUID
+  */
+  @NotNull 
+  @Schema(name = "tokenUUID", description = "The unique ID of the PAT.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("tokenUUID")
+  public String getTokenUUID() {
+    return tokenUUID;
+  }
+
+  public void setTokenUUID(String tokenUUID) {
+    this.tokenUUID = tokenUUID;
+  }
+
+  public PersonalAccessTokenInfoWithSecret userId(String userId) {
+    this.userId = userId;
+    return this;
+  }
+
+  /**
+   * The user ID of the PAT owner.
+   * @return userId
+  */
+  @NotNull 
+  @Schema(name = "userId", description = "The user ID of the PAT owner.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("userId")
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    PersonalAccessTokenInfoWithSecret personalAccessTokenInfoWithSecret = (PersonalAccessTokenInfoWithSecret) o;
+    return Objects.equals(this.expirationInUtc, personalAccessTokenInfoWithSecret.expirationInUtc) &&
+        Objects.equals(this.issueInUtc, personalAccessTokenInfoWithSecret.issueInUtc) &&
+        Objects.equals(this.secret, personalAccessTokenInfoWithSecret.secret) &&
+        Objects.equals(this.tenantId, personalAccessTokenInfoWithSecret.tenantId) &&
+        Objects.equals(this.tokenName, personalAccessTokenInfoWithSecret.tokenName) &&
+        Objects.equals(this.tokenUUID, personalAccessTokenInfoWithSecret.tokenUUID) &&
+        Objects.equals(this.userId, personalAccessTokenInfoWithSecret.userId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(expirationInUtc, issueInUtc, secret, tenantId, tokenName, tokenUUID, userId);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class PersonalAccessTokenInfoWithSecret {\n");
+    sb.append("    expirationInUtc: ").append(toIndentedString(expirationInUtc)).append("\n");
+    sb.append("    issueInUtc: ").append(toIndentedString(issueInUtc)).append("\n");
+    sb.append("    secret: ").append(toIndentedString(secret)).append("\n");
+    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    tokenName: ").append(toIndentedString(tokenName)).append("\n");
+    sb.append("    tokenUUID: ").append(toIndentedString(tokenUUID)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}
+
